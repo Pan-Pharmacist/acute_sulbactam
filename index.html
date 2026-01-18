@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#00897b">
+    <title>Sulbactam Dosage Calculator</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #00897b;
+            --primary-dark: #00695c;
+            --bg-color: #f0f2f5;
+            --text-color: #333;
+            --crcl-bg: #fce4ec;
+            --header-height: 60px;
+            --footer-height: 50px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            color: var(--text-color);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- Header --- */
+        header.app-bar {
+            background-color: #fff;
+            color: var(--primary-color);
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        header.app-bar h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        /* --- Main Layout --- */
+        main {
+            flex: 1;
+            margin-top: var(--header-height);
+            margin-bottom: var(--footer-height);
+            padding: 40px 20px; /* เพิ่ม Padding ให้ดูไม่อึดอัด */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* จัดกึ่งกลางแนวตั้งถ้าเนื้อหาน้อย แต่ยอมให้ยาวลงมาได้ */
+            justify-content: flex-start; 
+        }
+
+        /* --- Card Input --- */
+        .card-container {
+            width: 100%;
+            max-width: 850px; /* ขยายความกว้างเล็กน้อย */
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            margin-bottom: 25px;
+            animation: fadeIn 0.6s ease-out;
+            border: 1px solid #e0e0e0;
+        }
+
+        .card-header {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* ลวดลายจางๆ บน Header เพื่อลดความเรียบ */
+        .card-header::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%, transparent);
+            background-size: 20px 20px;
+            opacity: 0.1;
+        }
+
+        .card-header h2 { margin: 0; font-size: 1.5rem; font-weight: 700; position: relative; z-index: 1; }
+        .card-header p { margin: 8px 0 0; font-size: 1rem; opacity: 0.95; font-weight: 300; position: relative; z-index: 1; }
+
+        .card-body { padding: 30px; }
+
+        .form-row { display: flex; gap: 25px; margin-bottom: 25px; }
+        .form-group { flex: 1; }
+        @media (max-width: 768px) { .form-row { flex-direction: column; gap: 20px; } }
+
+        label { display: block; font-weight: 600; margin-bottom: 10px; color: #004d40; font-size: 1.05rem; }
+
+        select {
+            width: 100%; padding: 14px; border: 1px solid #ccc; border-radius: 8px;
+            font-family: 'Sarabun', sans-serif; font-size: 1rem; outline: none;
+            background-color: #fff; transition: border-color 0.2s;
+        }
+        select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0,137,123,0.1); }
+
+        /* --- Button --- */
+        .btn-check {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            font-family: 'Sarabun', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+        }
+        .btn-check:hover { background-color: #00796b; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+        .btn-check:active { transform: translateY(0); }
+        .btn-check:disabled { background-color: #cfd8dc; color: #90a4ae; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* --- Warning Box (Initial Info) --- */
+        .info-note {
+            width: 100%;
+            max-width: 850px;
+            background-color: #fff8e1; /* สีส้มอ่อนสวยงาม */
+            border-left: 6px solid #ffb300;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #5d4037;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            animation: slideUp 0.5s ease-out;
+            transition: opacity 0.5s ease; /* สำหรับตอนหายไป */
+        }
+        
+        .info-note strong { color: #e65100; font-size: 1.1rem; }
+
+        /* --- Result Table (Hidden Initially) --- */
+        .result-container {
+            width: 100%;
+            max-width: 1000px; /* ให้ตารางกว้างเต็มที่ */
+            display: none;
+            margin-bottom: 30px;
+            animation: fadeInTable 0.6s ease;
+        }
+
+        table {
+            width: 100%;
+            min-width: 700px; /* บังคับขนาดขั้นต่ำสำหรับมือถือ */
+            border-collapse: collapse;
+            font-size: 1rem;
+            background-color: white;
+            border: 1px solid #000; /* เส้นขอบนอกสีดำเข้ม */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        th, td {
+            border: 1px solid #000; /* เส้นตารางสีดำเข้ม */
+            padding: 15px;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 1.5;
+        }
+
+        th { background-color: #eeeeee; font-weight: 700; color: #212121; }
+
+        .col-crcl { background-color: var(--crcl-bg); font-weight: 700; width: 12%; }
+        .col-drug { font-weight: 600; width: 25%; font-size: 1.05rem; }
+        .col-ld { width: 28%; }
+        .col-md { width: 35%; }
+
+        .sub-dose { display: block; margin-top: 6px; font-size: 0.9em; color: #424242; font-style: italic; }
+
+        /* --- Footer --- */
+        footer {
+            background-color: #263238;
+            color: #eceff1;
+            padding: 15px;
+            text-align: center;
+            font-size: 0.85rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        /* --- Loader --- */
+        .loader {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid #fff;
+            border-radius: 50%;
+            width: 20px; height: 20px;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInTable { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+
+    <header class="app-bar">
+        <h1>Sulbactam Dosage Calculator</h1>
+    </header>
+
+    <main>
+        <div class="card-container">
+            <div class="card-header">
+                <h2>แนะนำขนาดยา Sulbactam</h2>
+                <p>สำหรับรักษาเชื้อ CRAB ตามค่า MIC และการทำงานของไต (CrCl)</p>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>1. ค่า MIC ของเชื้อ (mg/L)</label>
+                        <select id="micSelect">
+                            <option value="" disabled selected>-- กรุณาเลือกค่า MIC --</option>
+                            <option value="low">MIC < 16 mg/L</option>
+                            <option value="medium">MIC 16 - 32 mg/L</option>
+                            <option value="high">MIC > 32 mg/L</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>2. การทำงานของไต (CrCl)</label>
+                        <select id="crclSelect">
+                            <option value="" disabled selected>-- กรุณาเลือกช่วง CrCl --</option>
+                            <option value="normal">≥ 30 ml/min</option>
+                            <option value="moderate">15 - 29 ml/min หรือ CRRT</option>
+                            <option value="severe">< 15 ml/min, CAPD หรือ HD</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button id="btnProcess" class="btn-check" onclick="handleProcess()">
+                    <span class="loader" id="btnLoader"></span>
+                    <span id="btnText">ตรวจสอบข้อมูล</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="infoNote" class="info-note">
+            <strong>คำแนะนำสำคัญ:</strong><br>
+            สำหรับผู้ป่วยที่เกิดภาวะวิกฤต ภาวะ sepsis หรือ septic shock และ มีการทำงานของไตผิดปกติ แนะนำให้ขนาดยา sulbactam, cefoperazone/sulbactam หรือ ampicillin/sulbactam สำหรับการทำงานของไตปกติ (full dose) เป็นระยะเวลา 24-48 ชั่วโมง (ขึ้นกับความรุนแรงของการติดเชื้อ) หลังจากนั้นให้ปรับขนาดยาตามค่าการทำงานของไต creatinine clearance (CrCl)
+        </div>
+
+        <div id="resultContainer" class="result-container">
+            </div>
+    </main>
+
+    <footer>
+        หน่วยงานบริบาลผู้ป่วยใน กลุ่มงานเภสัชกรรม โรงพยาบาลนพรัตนราชธานี
+    </footer>
+
+    <script>
+        const db = {
+            low: { // MIC < 16
+                normal: {
+                    crclLabel: "≥30",
+                    drugs: [
+                        {
+                            name: "Sulbactam เดี่ยว",
+                            regimens: [
+                                { ld: "4 g + NSS/D5W 100 mL IV drip in 30 min", md: "2 g + NSS/D5W 100 mL IV drip in 4 hr q 12 hr<span class='sub-dose'>(sulbactam 4 g/day)</span>" },
+                                { ld: "4 g + NSS/D5W 100 mL IV drip in 30 min", md: "2 g + NSS/D5W 100 mL IV drip in 4 hr q 8 hr<span class='sub-dose'>(sulbactam 6 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Cefoperazone/sulbactam<sup>b</sup>",
+                            regimens: [
+                                { ld: "3-4.5 g + NSS/D5W 100 mL IV drip in 30 min", md: "3 g + NSS/D5W 100 mL IV drip in 4 hr q 6 hr<span class='sub-dose'>(sulbactam 4 g/day)</span>" },
+                                { ld: "4.5 g + NSS/D5W 100 mL IV drip in 30 min", md: "4.5 g + NSS/D5W 100 mL IV drip in 4 hr q 6 hr<span class='sub-dose'>(sulbactam 6 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Ampicillin/sulbactam<sup>c</sup>",
+                            regimens: [
+                                { ld: "3-4.5 g + NSS 100 mL IV drip in 30 min", md: "3 g + NSS 100 mL IV drip in 4 hr q 6 hr<span class='sub-dose'>(sulbactam 4 g/day)</span>" },
+                                { ld: "4.5 g + NSS 100 mL IV drip in 30 min", md: "4.5 g + NSS 100 mL IV drip in 4 hr q 6 hr<span class='sub-dose'>(sulbactam 6 g/day)</span>" }
+                            ]
+                        }
+                    ]
+                },
+                moderate: {
+                    crclLabel: "15-29<br>หรือ<br>CRRT",
+                    drugs: [
+                        {
+                            name: "Sulbactam เดี่ยว",
+                            regimens: [
+                                { ld: "4 g + NSS/D5W 100 mL IV drip in 30 min", md: "2 g + NSS/D5W 100 mL IV drip in 4 hr q 12 hr<span class='sub-dose'>(sulbactam 4 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Cefoperazone/sulbactam<sup>b</sup>",
+                            regimens: [
+                                { ld: "3-4.5 g + NSS/D5W 100 mL IV drip in 30 min", md: "3 g + NSS/D5W 100 mL IV drip in 4 hr q 6 hr<span class='sub-dose'>(sulbactam 4 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Ampicillin/sulbactam<sup>c</sup>",
+                            regimens: [
+                                { ld: "3-4.5 g + NSS 100 mL IV drip in 30 min", md: "3 g + NSS 100 mL IV drip in 4 hr q 6 hr<span class='sub-dose'>(sulbactam 4 g/day)</span>" }
+                            ]
+                        }
+                    ]
+                },
+                severe: {
+                    crclLabel: "<15<br>หรือ<br>CAPD/HD",
+                    drugs: [
+                        {
+                            name: "Sulbactam เดี่ยว",
+                            regimens: [
+                                { ld: "4 g + NSS/D5W 100 mL IV drip in 30 min", md: "3 g + NSS/D5W 100 mL IV drip in 4 hr q 24 hr<span class='sub-dose'>(ในวัน HD ให้ยาหลัง HD)<br>(sulbactam 3 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Cefoperazone/sulbactam<sup>b</sup>",
+                            regimens: [
+                                { ld: "3-4.5 g + NSS/D5W 100 mL IV drip in 30 min", md: "3 g + NSS/D5W 100 mL IV drip in 4 hr q 8 hr<span class='sub-dose'>(sulbactam 3 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Ampicillin/sulbactam<sup>c</sup>",
+                            regimens: [
+                                { ld: "3-4.5 g + NSS 100 mL IV drip in 30 min", md: "3 g + NSS 100 mL IV drip in 4 hr q 8 hr<span class='sub-dose'>(sulbactam 3 g/day)</span>" }
+                            ]
+                        }
+                    ]
+                }
+            },
+            medium: { // MIC 16-32
+                normal: {
+                    crclLabel: "≥30",
+                    drugs: [
+                        {
+                            name: "Sulbactam เดี่ยว",
+                            regimens: [
+                                { ld: "4 g + NSS/D5W 100 mL IV drip in 30 min", md: "2 g + NSS/D5W 100 mL IV drip in 4 hr q 8 hr<span class='sub-dose'>(sulbactam 6 g/day)</span>" },
+                                { ld: "4 g + NSS/D5W 100 mL IV drip in 30 min", md: "2 g + NSS/D5W 100 mL IV drip in 4 hr q 6 hr<span class='sub-dose'>(sulbactam 8 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Cefoperazone/sulbactam<sup>b</sup>",
+                            regimens: [
+                                { ld: "4.5 g + NSS/D5W 100 mL IV drip in 30 min", md: "4.5 g + NSS/D5W 100 mL IV drip in 4 hr q 6 hr<span class='sub-dose'>(sulbactam 6 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Ampicillin/sulbactam<sup>c</sup>",
+                            regimens: [
+                                { ld: "4.5 g + NSS 100 mL IV drip in 30 min", md: "4.5 g + NSS 100 mL IV drip in 4 hr q 6 hr<span class='sub-dose'>(sulbactam 6 g/day)</span>" }
+                            ]
+                        },
+                         {
+                            name: "Cefoperazone/sulbactam<sup>b</sup><br>+<br>Ampicillin/sulbactam<sup>c</sup>",
+                            regimens: [
+                                 { ld: "3-4.5 g (Cef) + 3-4.5 g (Amp)", md: "3 g (Cef) + 3 g (Amp) q 6 hr<span class='sub-dose'>(sulbactam 8 g/day)</span>" },
+                                 { ld: "4.5 g (Cef) + 4.5 g (Amp)", md: "4.5 g (Cef) + 4.5 g (Amp) q 8 hr<span class='sub-dose'>(sulbactam 9 g/day)</span>" }
+                            ]
+                        }
+                    ]
+                },
+                moderate: {
+                    crclLabel: "15-29<br>หรือ<br>CRRT",
+                    drugs: [
+                        {
+                            name: "Sulbactam เดี่ยว",
+                            regimens: [
+                                { ld: "4 g + NSS/D5W 100 mL IV drip in 30 min", md: "2 g + NSS/D5W 100 mL IV drip in 4 hr q 8 hr<span class='sub-dose'>(sulbactam 6 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Cefoperazone/sulbactam<sup>b</sup><br>+<br>Ampicillin/sulbactam<sup>c</sup>",
+                            regimens: [
+                                 { ld: "3-4.5 g (Cef) + 3-4.5 g (Amp)", md: "3 g (Cef) + 3 g (Amp) q 8 hr<span class='sub-dose'>(sulbactam 6 g/day)</span>" }
+                            ]
+                        }
+                    ]
+                },
+                 severe: {
+                    crclLabel: "<15<br>หรือ<br>CAPD/HD",
+                    drugs: [
+                        {
+                            name: "Sulbactam เดี่ยว",
+                            regimens: [
+                                { ld: "4 g + NSS/D5W 100 mL IV drip in 30 min", md: "2 g + NSS/D5W 100 mL IV drip in 4 hr q 12 hr<span class='sub-dose'>(sulbactam 4 g/day)</span>" },
+                                { ld: "4 g + NSS/D5W 100 mL IV drip in 30 min", md: "2 g + NSS/D5W 100 mL IV drip in 4 hr q 8 hr<span class='sub-dose'>(sulbactam 6 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Cefoperazone/sulbactam<sup>b</sup>",
+                            regimens: [
+                                { ld: "3-4.5 g + NSS/D5W 100 mL IV drip in 30 min", md: "3 g + NSS/D5W 100 mL IV drip in 4 hr q 6 hr<span class='sub-dose'>(sulbactam 4 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Ampicillin/sulbactam<sup>c</sup>",
+                            regimens: [
+                                { ld: "3-4.5 g + NSS 100 mL IV drip in 30 min", md: "3 g + NSS 100 mL IV drip in 4 hr q 6 hr<span class='sub-dose'>(sulbactam 4 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Cefoperazone/sulbactam<sup>b</sup><br>+<br>Ampicillin/sulbactam<sup>c</sup>",
+                            regimens: [
+                                 { ld: "3-4.5 g (Cef) + 3-4.5 g (Amp)", md: "3 g (Cef) + 3 g (Amp) q 12 hr<span class='sub-dose'>(sulbactam 4 g/day)</span>" }
+                            ]
+                        },
+                         {
+                            name: "Cefoperazone/sulbactam<sup>b</sup>",
+                            regimens: [
+                                { ld: "3-4.5 g + NSS/D5W 100 mL IV drip in 30 min", md: "3 g + NSS/D5W 100 mL IV drip in 4 hr q 8 hr<span class='sub-dose'>(sulbactam 3 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Ampicillin/sulbactam<sup>c</sup>",
+                            regimens: [
+                                { ld: "3-4.5 g + NSS 100 mL IV drip in 30 min", md: "3 g + NSS 100 mL IV drip in 4 hr q 8 hr<span class='sub-dose'>(sulbactam 3 g/day)</span>" }
+                            ]
+                        }
+                    ]
+                }
+            },
+            high: { // MIC > 32
+                normal: {
+                    crclLabel: "≥30",
+                    drugs: [
+                        {
+                            name: "Sulbactam เดี่ยว",
+                            regimens: [
+                                { ld: "4 g + NSS/D5W 100 mL IV drip in 30 min", md: "4 g + NSS/D5W 100 mL IV drip in 4 hr q 8 hr<span class='sub-dose'>(sulbactam 12 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Cefoperazone/sulbactam<sup>b</sup><br>+<br>Ampicillin/sulbactam<sup>c</sup>",
+                            regimens: [
+                                 { ld: "4.5 g (Cef) + 4.5 g (Amp)", md: "4.5 g (Cef) + 4.5 g (Amp) q 6 hr<span class='sub-dose'>(sulbactam 12 g/day)</span>" }
+                            ]
+                        }
+                    ]
+                },
+                moderate: {
+                    crclLabel: "15-29<br>หรือ<br>CRRT",
+                    drugs: [
+                        {
+                            name: "Sulbactam เดี่ยว",
+                            regimens: [
+                                { ld: "4 g + NSS/D5W 100 mL IV drip in 30 min", md: "2 g + NSS/D5W 100 mL IV drip in 4 hr q 8 hr<span class='sub-dose'>(sulbactam 6 g/day)</span>" },
+                                { ld: "-", md: "2 g + NSS/D5W 100 mL IV drip in 4 hr q 6 hr<span class='sub-dose'>(sulbactam 8 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Cefoperazone/sulbactam<sup>b</sup>",
+                            regimens: [
+                                { ld: "4.5 g + NSS/D5W 100 mL IV drip in 30 min", md: "4.5 g + NSS/D5W 100 mL IV drip in 4 hr q 6 hr<span class='sub-dose'>(sulbactam 6 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Ampicillin/sulbactam<sup>c</sup>",
+                            regimens: [
+                                { ld: "4.5 g + NSS 100 mL IV drip in 30 min", md: "4.5 g + NSS 100 mL IV drip in 4 hr q 6 hr<span class='sub-dose'>(sulbactam 6 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Cefoperazone/sulbactam<sup>b</sup><br>+<br>Ampicillin/sulbactam<sup>c</sup>",
+                            regimens: [
+                                 { ld: "3-4.5 g (Cef) + 3-4.5 g (Amp)", md: "3 g (Cef) + 3 g (Amp) q 8 hr<span class='sub-dose'>(sulbactam 6 g/day)</span>" },
+                                 { ld: "3-4.5 g (Cef) + 3-4.5 g (Amp)", md: "3 g (Cef) + 3 g (Amp) q 6 hr<span class='sub-dose'>(sulbactam 8 g/day)</span>" },
+                                 { ld: "4.5 g (Cef) + 4.5 g (Amp)", md: "4.5 g (Cef) + 4.5 g (Amp) q 8 hr<span class='sub-dose'>(sulbactam 9 g/day)</span>" }
+                            ]
+                        }
+                    ]
+                },
+                 severe: {
+                    crclLabel: "<15<br>หรือ<br>CAPD/HD",
+                    drugs: [
+                        {
+                            name: "Sulbactam เดี่ยว",
+                            regimens: [
+                                { ld: "4 g + NSS/D5W 100 mL IV drip in 30 min", md: "2 g + NSS/D5W 100 mL IV drip in 4 hr q 12 hr<span class='sub-dose'>(sulbactam 4 g/day)</span>" },
+                                { ld: "4 g + NSS/D5W 100 mL IV drip in 30 min", md: "2 g + NSS/D5W 100 mL IV drip in 4 hr q 8 hr<span class='sub-dose'>(sulbactam 6 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Cefoperazone/sulbactam<sup>b</sup>",
+                            regimens: [
+                                { ld: "3-4.5 g + NSS/D5W 100 mL IV drip in 30 min", md: "3 g + NSS/D5W 100 mL IV drip in 4 hr q 6 hr<span class='sub-dose'>(sulbactam 4 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Ampicillin/sulbactam<sup>c</sup>",
+                            regimens: [
+                                { ld: "3-4.5 g + NSS 100 mL IV drip in 30 min", md: "3 g + NSS 100 mL IV drip in 4 hr q 6 hr<span class='sub-dose'>(sulbactam 4 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Cefoperazone/sulbactam<sup>b</sup><br>+<br>Ampicillin/sulbactam<sup>c</sup>",
+                            regimens: [
+                                 { ld: "3-4.5 g (Cef) + 3-4.5 g (Amp)", md: "3 g (Cef) + 3 g (Amp) q 12 hr<span class='sub-dose'>(sulbactam 4 g/day)</span>" }
+                            ]
+                        },
+                         {
+                            name: "Cefoperazone/sulbactam<sup>b</sup>",
+                            regimens: [
+                                { ld: "4.5 g + NSS/D5W 100 mL IV drip in 30 min", md: "4.5 g + NSS/D5W 100 mL IV drip in 4 hr q 6 hr<span class='sub-dose'>(sulbactam 6 g/day)</span>" }
+                            ]
+                        },
+                        {
+                            name: "Cefoperazone/sulbactam<sup>b</sup><br>+<br>Ampicillin/sulbactam<sup>c</sup>",
+                            regimens: [
+                                 { ld: "3-4.5 g (Cef) + 3-4.5 g (Amp)", md: "3 g (Cef) + 3 g (Amp) q 8 hr<span class='sub-dose'>(sulbactam 3 g/day)</span>" }
+                            ]
+                        }
+                    ]
+                }
+            }
+        };
+
+        function handleProcess() {
+            const btn = document.getElementById('btnProcess');
+            const loader = document.getElementById('btnLoader');
+            const btnText = document.getElementById('btnText');
+            const resultContainer = document.getElementById('resultContainer');
+            const infoNote = document.getElementById('infoNote'); // อ้างอิงกล่องข้อความ
+            
+            const mic = document.getElementById('micSelect').value;
+            const crcl = document.getElementById('crclSelect').value;
+
+            // ตรวจสอบข้อมูล
+            if (!mic || !crcl) {
+                alert("กรุณาเลือกข้อมูลให้ครบถ้วน");
+                return;
+            }
+
+            // เริ่ม Effect การประมวลผล
+            resultContainer.style.display = 'none'; // ซ่อนผลลัพธ์เก่า
+            btn.disabled = true;
+            loader.style.display = 'block';
+            btnText.innerText = 'กำลังประมวลผล...';
+
+            // หน่วงเวลาจำลองการคำนวณ (800ms)
+            setTimeout(() => {
+                renderTable(mic, crcl);
+                
+                // คืนค่าปุ่ม
+                btn.disabled = false;
+                loader.style.display = 'none';
+                btnText.innerText = 'ตรวจสอบข้อมูล';
+                
+                // ซ่อนกล่องข้อความคำแนะนำ
+                if (infoNote) {
+                    infoNote.style.opacity = '0';
+                    setTimeout(() => {
+                        infoNote.style.display = 'none';
+                    }, 500); // รอให้ fade out เสร็จก่อนซ่อน display
+                }
+
+            }, 800);
+        }
+
+        function renderTable(mic, crcl) {
+            const container = document.getElementById('resultContainer');
+
+            if (!db[mic] || !db[mic][crcl]) {
+                container.innerHTML = "<p style='text-align:center; padding:20px; color:red;'>ยังไม่มีข้อมูลสำหรับเงื่อนไขนี้ในระบบสาธิต</p>";
+                container.style.display = 'block';
+                return;
+            }
+
+            const data = db[mic][crcl];
+            const crclLabel = data.crclLabel;
+            const drugs = data.drugs;
+
+            let totalRows = 0;
+            drugs.forEach(d => { totalRows += d.regimens.length; });
+
+            let html = `<table>
+                <thead>
+                    <tr>
+                        <th style="width:12%">CrCl (ml/min)</th>
+                        <th style="width:25%">ยาต้านจุลชีพ</th>
+                        <th style="width:28%">ขนาดแบบโถม (Loading dose)<br><span style="font-weight:normal; font-size:0.8em">(IV drip in 30 min)</span></th>
+                        <th style="width:35%">ขนาดยาระยะพยุง (Maintenance dose)<br><span style="font-weight:normal; font-size:0.8em">(IV drip in 4 hr)</span></th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+            let isFirstRowOfAll = true;
+
+            drugs.forEach(drug => {
+                const regimens = drug.regimens;
+                const drugRowSpan = regimens.length;
+
+                regimens.forEach((regimen, index) => {
+                    html += `<tr>`;
+
+                    if (isFirstRowOfAll) {
+                        html += `<td class="col-crcl" rowspan="${totalRows}">${crclLabel}</td>`;
+                        isFirstRowOfAll = false;
+                    }
+
+                    if (index === 0) {
+                        html += `<td class="col-drug" rowspan="${drugRowSpan}">${drug.name}</td>`;
+                    }
+
+                    html += `<td class="col-ld">${regimen.ld}</td>`;
+                    html += `<td class="col-md">${regimen.md}</td>`;
+                    html += `</tr>`;
+                });
+            });
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+            container.style.display = 'block';
+            
+            // Scroll ไปหาผลลัพธ์
+            setTimeout(() => {
+                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+    </script>
+</body>
+</html>
