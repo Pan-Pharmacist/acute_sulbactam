@@ -35,16 +35,39 @@
             line-height: 1.5;
         }
 
-        /* --- Header --- */
+        /* --- Header (Updated for Home Button) --- */
         header {
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             padding: 16px;
-            text-align: center;
+            /* ปรับเป็น Flexbox เพื่อจัดตำแหน่งปุ่มและชื่อเรื่อง */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative; /* เพื่อให้ปุ่ม Home อิงตำแหน่งจากกล่องนี้ */
             box-shadow: 0 2px 10px rgba(0,0,0,0.15);
             position: fixed; width: 100%; top: 0; z-index: 1000;
         }
         header h1 { margin: 0; font-size: 1.3rem; font-weight: 700; letter-spacing: 0.5px; }
+
+        /* --- Home Button Style (New) --- */
+        .home-btn {
+            position: absolute; /* ลอยอยู่ซ้ายสุดเสมอ */
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%); /* จัดกึ่งกลางแนวตั้ง */
+            background: rgba(255, 255, 255, 0.2); /* พื้นหลังจางๆ */
+            border: none;
+            border-radius: 50%;
+            width: 36px; height: 36px;
+            display: flex; justify-content: center; align-items: center;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .home-btn:hover { background: rgba(255, 255, 255, 0.4); }
+        .home-btn svg { width: 20px; height: 20px; fill: white; }
 
         /* --- Main Layout --- */
         main {
@@ -178,13 +201,13 @@
         .mix-block:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
         .plus-sign { color: var(--primary); font-weight: 900; margin-right: 4px; }
 
-        /* --- Footer Note Box (New) --- */
+        /* --- Footer Note Box --- */
         .footer-notes {
-            background-color: #f9fbfc; /* จางกว่า alert-box */
-            border-left: 4px solid #90a4ae; /* สีเทาฟ้า ดูเป็นข้อมูลประกอบ */
+            background-color: #f9fbfc;
+            border-left: 4px solid #90a4ae;
             padding: 20px;
             border-radius: 8px;
-            font-size: 0.8rem; /* ขนาดเล็กกว่าตามต้องการ */
+            font-size: 0.8rem;
             color: #546e7a;
             line-height: 1.5;
             box-shadow: var(--card-shadow);
@@ -226,13 +249,19 @@
 <body>
 
     <header>
+        <a href="index.html" class="home-btn" aria-label="กลับหน้าหลัก">
+            <svg viewBox="0 0 24 24">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+        </a>
+
         <h1>Sulbactam Dosage Calculator</h1>
     </header>
 
     <main>
         <div id="sepsisInfo" class="alert-box">
             <strong>⚠️ คำแนะนำสำคัญ (Sepsis / Septic Shock)</strong>
-            สำหรับผู้ป่วยวิกฤตที่มีการทำงานของไตผิดปกติ แนะนำให้ขนาดยา <u>Full Dose (สำหรับคนไตปกติ)</u> ในช่วง 24-48 ชั่วโมงแรก (ขึ้นกับความรุนแรง) หลังจากนั้นจึงปรับตามค่า CrCl
+            สำหรับผู้ป่วยที่เกิดภาวะวิกฤต ภาวะ sepsis หรือ septic shock และ มีการทำงานของไตผิดปกติ แนะนำให้ขนาดยา sulbactam, cefoperazone/sulbactam หรือ ampicillin/sulbactam สำหรับการทำงานของไตปกติ <u>Full Dose (สำหรับคนไตปกติ)</u> เป็นระยะเวลา 24-48 ชั่วโมง (ขึ้นกับความรุนแรงของการติดเชื้อ) หลังจากนั้นให้ปรับขนาดยาตามค่าการทำงานของไต creatinine clearance (CrCl) ทั้งนี้การใช้ยา sulbactam สำหรับรักษาการติดเชื้อ CRAB ในผู้ป่วยที่เกิดภาวะวิกฤต ภาวะ sepsis หรือ septic shock แนะนำเป้าหมายการรักษาตามหลักการเภสัชจลนศาสตร์/เภสัชพลศาสตร์ (PK/PD) คือ ระยะเวลาที่ความเข้มข้นของยาในรูปแบบอิสระสูงกว่าค่า MIC ของเชื้อ (fT > MIC) ร้อยละ 75-100  
         </div>
 
         <div class="card">
@@ -298,12 +327,11 @@
     </main>
 
     <footer>
-        งานบริบาลทางเภสัชกรรมผู้ป่วยใน กลุ่มงานเภสัชกรรม โรงพยาบาลนพรัตนราชธานี<br>
-      
+        จัดทำโดย งานบริบาลเภสัชกรรมผู้ปวยใน<br>
     </footer>
 
     <script>
-        // Database with corrected syntax
+        // Database
         const db = {
             "low": { 
                 "normal": {
@@ -403,6 +431,7 @@
                     "6": [
                         { name: "Sulbactam เดี่ยว", type: "single", ld: "<b>Sulbactam 4 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Sulbactam 2 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 8 hr" },
                         { name: "Cefoperazone/sulbactam", type: "combo", ld: "<b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 6 hr" },
+                        { name: "Ampicillin/sulbactam", type: "combo", ld: "<b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 30 min", md: "<b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 4 hr q 6 hr" },
                         { name: "Cefoperazone/sulbactam + <br>Ampicillin/sulbactam", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 3-4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3-4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr</span> <div style='margin-top:5px; border-top:1px dashed #ccc; padding-top:4px;'>Administer <b>q 8 hr</b></div>" }
                     ]
                 }
@@ -485,8 +514,8 @@
 
                 let badgeClass = 'badge-single';
                 let badgeText = 'Single Agent';
-                if(regimen.type === 'combo') { badgeClass = 'badge-combo'; badgeText = 'Combination'; }
-                if(regimen.type === 'mix') { badgeClass = 'badge-mix'; badgeText = 'Mixed Formula'; }
+                if(regimen.type === 'combo') { badgeClass = 'badge-combo'; badgeText = 'Fixed-dose Combination'; }
+                if(regimen.type === 'mix') { badgeClass = 'badge-mix'; badgeText = 'Combination Therapy'; }
 
                 card.innerHTML = `
                     <div class="drug-header">
@@ -515,4 +544,3 @@
     </script>
 </body>
 </html>
-
