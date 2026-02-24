@@ -35,28 +35,27 @@
             line-height: 1.5;
         }
 
-        /* --- Header (Updated for Home Button) --- */
+        /* --- Header --- */
         header {
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             padding: 16px;
-            /* ปรับเป็น Flexbox เพื่อจัดตำแหน่งปุ่มและชื่อเรื่อง */
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative; /* เพื่อให้ปุ่ม Home อิงตำแหน่งจากกล่องนี้ */
+            position: relative; 
             box-shadow: 0 2px 10px rgba(0,0,0,0.15);
             position: fixed; width: 100%; top: 0; z-index: 1000;
         }
         header h1 { margin: 0; font-size: 1.3rem; font-weight: 700; letter-spacing: 0.5px; }
 
-        /* --- Home Button Style (New) --- */
+        /* --- Home Button Style --- */
         .home-btn {
-            position: absolute; /* ลอยอยู่ซ้ายสุดเสมอ */
+            position: absolute; 
             left: 16px;
             top: 50%;
-            transform: translateY(-50%); /* จัดกึ่งกลางแนวตั้ง */
-            background: rgba(255, 255, 255, 0.2); /* พื้นหลังจางๆ */
+            transform: translateY(-50%); 
+            background: rgba(255, 255, 255, 0.2); 
             border: none;
             border-radius: 50%;
             width: 36px; height: 36px;
@@ -132,28 +131,23 @@
         .btn-check:active { transform: translateY(0); }
         .btn-check:disabled { background-color: #b0bec5; cursor: not-allowed; }
 
-        /* --- Dose Chips --- */
-        .dose-section { display: none; margin-top: 10px; animation: slideDown 0.5s ease; }
-        .section-header {
-            text-align: center; font-size: 1.1rem; font-weight: 700;
-            color: var(--text-label); margin-bottom: 16px;
-            border-bottom: 2px solid #f5f5f5; padding-bottom: 10px;
-        }
-        .chips-wrapper { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
-        .chip {
-            background: white; border: 2px solid #e0e0e0;
-            padding: 10px 20px; border-radius: 50px;
-            font-size: 1rem; font-weight: 600; color: var(--text-label);
-            cursor: pointer; transition: all 0.2s;
-        }
-        .chip:hover { border-color: var(--primary); color: var(--primary); }
-        .chip.active {
-            background: var(--primary); border-color: var(--primary); color: white;
-            box-shadow: 0 4px 10px rgba(0,137,123,0.3); transform: scale(1.05);
+        /* --- Total Dose Header (NEW) --- */
+        .total-dose-header {
+            background: linear-gradient(135deg, #e0f2f1, #b2dfdb);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--primary-dark);
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 1px solid #80cbc4;
+            margin-bottom: 8px;
+            animation: slideDown 0.5s ease;
         }
 
         /* --- Results Styles --- */
-        .results-list { display: none; flex-direction: column; gap: 20px; margin-top: 24px; animation: fadeIn 0.5s ease; }
+        .results-list { display: none; flex-direction: column; gap: 20px; margin-top: 10px; animation: fadeIn 0.5s ease; }
 
         .regimen-card {
             background: white; border-radius: 12px;
@@ -164,16 +158,19 @@
         .drug-header {
             display: flex; justify-content: space-between; align-items: flex-start;
             margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px dashed #cfd8dc;
+            flex-wrap: wrap; gap: 10px;
         }
         .drug-title { font-size: 1.25rem; font-weight: 700; color: var(--primary-dark); line-height: 1.3; }
         
         .badge {
             font-size: 0.8rem; padding: 6px 12px; border-radius: 4px;
-            font-weight: 700; text-transform: uppercase; white-space: nowrap; margin-left: 10px;
+            font-weight: 700; text-transform: uppercase; white-space: nowrap;
+            display: inline-block;
         }
         .badge-single { background: #e3f2fd; color: #1565c0; }
         .badge-combo { background: #e8f5e9; color: #2e7d32; }
         .badge-mix { background: #fce4ec; color: #c2185b; }
+        .badge-dose-spec { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; margin-right: 8px; }
 
         .detail-row { margin-bottom: 16px; }
         .detail-row:last-child { margin-bottom: 0; }
@@ -218,12 +215,6 @@
         .footer-notes li { margin-bottom: 6px; }
         .footer-notes p { margin-bottom: 12px; }
         .footer-notes p:last-child { margin-bottom: 0; }
-        
-        .note-bullet {
-            display: inline-block; width: 6px; height: 6px; 
-            background-color: #90a4ae; border-radius: 50%; 
-            margin-right: 8px; vertical-align: middle;
-        }
 
         /* --- Footer --- */
         footer {
@@ -261,7 +252,7 @@
     <main>
         <div id="sepsisInfo" class="alert-box">
             <strong>⚠️ คำแนะนำสำคัญ (Sepsis / Septic Shock)</strong>
-            สำหรับผู้ป่วยที่เกิดภาวะวิกฤต ภาวะ sepsis หรือ septic shock และ มีการทำงานของไตผิดปกติ แนะนำให้ขนาดยา sulbactam, cefoperazone/sulbactam หรือ ampicillin/sulbactam สำหรับการทำงานของไตปกติ <u>Full Dose (สำหรับคนไตปกติ)</u> เป็นระยะเวลา 24-48 ชั่วโมง (ขึ้นกับความรุนแรงของการติดเชื้อ) หลังจากนั้นให้ปรับขนาดยาตามค่าการทำงานของไต creatinine clearance (CrCl) ทั้งนี้การใช้ยา sulbactam สำหรับรักษาการติดเชื้อ CRAB ในผู้ป่วยที่เกิดภาวะวิกฤต ภาวะ sepsis หรือ septic shock แนะนำเป้าหมายการรักษาตามหลักการเภสัชจลนศาสตร์/เภสัชพลศาสตร์ (PK/PD) คือ ระยะเวลาที่ความเข้มข้นของยาในรูปแบบอิสระสูงกว่าค่า MIC ของเชื้อ (fT > MIC) ร้อยละ 75-100  
+            สำหรับผู้ป่วยที่เกิดภาวะวิกฤต ภาวะ sepsis หรือ septic shock และ มีการทำงานของไตผิดปกติ แนะนำให้ขนาดยา sulbactam, cefoperazone/sulbactam หรือ ampicillin/sulbactam สำหรับการทำงานของไตปกติ <u>Full Dose (สำหรับคนไตปกติ)</u> เป็นระยะเวลา 24 ชั่วโมง (ขึ้นกับความรุนแรงของการติดเชื้อ) หลังจากนั้นให้ปรับขนาดยาตามค่าการทำงานของไต creatinine clearance (CrCl) ทั้งนี้การใช้ยา sulbactam สำหรับรักษาการติดเชื้อ CRAB ในผู้ป่วยที่เกิดภาวะวิกฤต ภาวะ sepsis หรือ septic shock แนะนำเป้าหมายการรักษาตามหลักการเภสัชจลนศาสตร์/เภสัชพลศาสตร์ (PK/PD) คือ ระยะเวลาที่ความเข้มข้นของยาในรูปแบบอิสระสูงกว่าค่า MIC ของเชื้อ (fT > MIC) ร้อยละ 75-100  
         </div>
 
         <div class="card">
@@ -275,18 +266,18 @@
                         <label>1. ค่า MIC ของเชื้อ (mg/L)</label>
                         <select id="micSelect">
                             <option value="" disabled selected>-- กรุณาเลือกค่า MIC --</option>
-                            <option value="low">MIC < 16 mg/L</option>
+                            <option value="low">MIC &lt; 16 mg/L</option>
                             <option value="medium">MIC 16 - 32 mg/L</option>
-                            <option value="high">MIC > 32 mg/L</option>
+                            <option value="high">MIC &gt; 32 mg/L</option>
                         </select>
                     </div>
                     <div>
                         <label>2. การทำงานของไต (CrCl)</label>
                         <select id="crclSelect">
                             <option value="" disabled selected>-- กรุณาเลือกช่วง CrCl --</option>
-                            <option value="normal">≥ 30 ml/min</option>
+                            <option value="normal">&ge; 30 ml/min</option>
                             <option value="moderate">15 - 29 ml/min หรือ CRRT</option>
-                            <option value="severe">< 15 ml/min, CAPD หรือ HD</option>
+                            <option value="severe">&lt; 15 ml/min, CAPD หรือ HD</option>
                         </select>
                     </div>
                 </div>
@@ -296,12 +287,6 @@
                     <span id="btnText">ตรวจสอบข้อมูล</span>
                 </button>
             </div>
-        </div>
-
-        <div id="doseSection" class="dose-section">
-            <div class="section-header">เลือกขนาดยา Sulbactam รวมต่อวัน</div>
-            <div id="chipsContainer" class="chips-wrapper">
-                </div>
         </div>
 
         <div id="resultsList" class="results-list">
@@ -322,41 +307,45 @@
                 
                 <p>• <b>ข้อควรระวัง Cefoperazone:</b> เนื่องจากโครงสร้างของยาประกอบด้วย N-methylthiotetrazole ซึ่งทำให้เกิด Hypoprothrombinemia และเกิด Bleeding ได้ สำหรับผู้ป่วยที่มีความเสี่ยงต่อการเกิด Bleeding ได้ง่าย แนะนําป้องกันด้วย <b>Vitamin K 10 mg IV สัปดาห์ละ 1 ครั้ง</b> (โดยเริ่มหลังจาก Cefoperazone 3 วัน)</p>
             </div>
+
+            <div style="margin-top: 15px; border-top: 1px dashed #cfd8dc; padding-top: 15px;">
+                <p><strong>Verify Data วันที่ 05-02-2026 โดย</strong></p>
+                <p style="margin-bottom: 4px;">• เภสัชกรหญิงศุภานันท์ บึงเจริญกิจกุล งานบริบาลเภสัชกรรมผู้ป่วยใน กลุ่มงานเภสัชกรรม โรงพยาบาลนพรัตนราชธานี</p>
+                <p>• รองศาสตราจารย์ ดร. เภสัชกร วิชัย สันติมาลีวรกุล คณะเภสัชศาสตร์ มหาวิทยาลัยศิลปากร</p>
+            </div>
         </div>
 
     </main>
 
     <footer>
-        จัดทำโดย งานบริบาลเภสัชกรรมผู้ปวยใน<br>
+        จัดทำโดย งานบริบาลเภสัชกรรมผู้ป่วยใน<br>
     </footer>
 
     <script>
-        // Database
+        // อัปเดต Database โครงสร้างใหม่ให้แสดงผลรวดเดียว (จัดกลุ่มตาม MIC -> CrCl)
         const db = {
             "low": { 
                 "normal": {
-                    "4": [
-                        { name: "Sulbactam เดี่ยว", type: "single", ld: "<b>Sulbactam 4 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Sulbactam 2 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 12 hr" },
-                        { name: "Cefoperazone/sulbactam", type: "combo", ld: "<b>Cefoperazone/sulbactam 3-4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 6 hr" },
-                        { name: "Ampicillin/sulbactam", type: "combo", ld: "<b>Ampicillin/sulbactam 3-4.5 g</b> + NSS 100 mL IV drip in 30 min", md: "<b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr q 6 hr" }
-                    ],
-                    "6": [
+                    doseLabel: "6",
+                    regimens: [
                         { name: "Sulbactam เดี่ยว", type: "single", ld: "<b>Sulbactam 4 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Sulbactam 2 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 8 hr" },
                         { name: "Cefoperazone/sulbactam", type: "combo", ld: "<b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 6 hr" },
                         { name: "Ampicillin/sulbactam", type: "combo", ld: "<b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 30 min", md: "<b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 4 hr q 6 hr" },
-                                                 { name: "Cefoperazone/sulbactam + <br>Ampicillin/sulbactam", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 3-4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3-4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr</span> <div style='margin-top:5px; border-top:1px dashed #ccc; padding-top:4px;'>Administer <b>q 8 hr</b></div>" }
+                        { name: "Cefoperazone/sulbactam +<br>Ampicillin/sulbactam", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 3-4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3-4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 8 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr q 8 hr</span>" }
                     ]
                 },
                 "moderate": {
-                    "4": [
+                    doseLabel: "4",
+                    regimens: [
                         { name: "Sulbactam เดี่ยว", type: "single", ld: "<b>Sulbactam 4 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Sulbactam 2 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 12 hr" },
                         { name: "Cefoperazone/sulbactam", type: "combo", ld: "<b>Cefoperazone/sulbactam 3-4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 6 hr" },
                         { name: "Ampicillin/sulbactam", type: "combo", ld: "<b>Ampicillin/sulbactam 3-4.5 g</b> + NSS 100 mL IV drip in 30 min", md: "<b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr q 6 hr" }
                     ]
                 },
                 "severe": {
-                    "3": [
-                        { name: "Sulbactam เดี่ยว", type: "single", ld: "<b>Sulbactam 4 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 24 hr <br><span style='color:#d32f2f; font-size:0.9em'>(ในวัน HD ให้ยาหลัง HD)</span>" },
+                    doseLabel: "3-4",
+                    regimens: [
+                        { name: "Sulbactam เดี่ยว", type: "single", ld: "<b>Sulbactam 4 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Sulbactam 2 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 12 hr" },
                         { name: "Cefoperazone/sulbactam", type: "combo", ld: "<b>Cefoperazone/sulbactam 3-4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 8 hr" },
                         { name: "Ampicillin/sulbactam", type: "combo", ld: "<b>Ampicillin/sulbactam 3-4.5 g</b> + NSS 100 mL IV drip in 30 min", md: "<b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr q 8 hr" }
                     ]
@@ -364,75 +353,49 @@
             },
             "medium": {
                 "normal": {
-                    "6": [
-                        { name: "Sulbactam เดี่ยว", type: "single", ld: "<b>Sulbactam 4 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Sulbactam 2 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 8 hr" },
-                        { name: "Cefoperazone/sulbactam", type: "combo", ld: "<b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 6 hr" },
-                        { name: "Ampicillin/sulbactam", type: "combo", ld: "<b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 30 min", md: "<b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 4 hr q 6 hr" },
-                        { name: "Cefoperazone/sulbactam + <br>Ampicillin/sulbactam", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 3-4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3-4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr</span> <div style='margin-top:5px; border-top:1px dashed #ccc; padding-top:4px;'>Administer <b>q 8 hr</b></div>" }
-                    ],
-                    "8": [
-                        { name: "Sulbactam เดี่ยว", type: "single", ld: "<b>Sulbactam 4 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Sulbactam 2 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 6 hr" },
-                        { name: "Cefoperazone/sulbactam + <br>Ampicillin/sulbactam", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 3-4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3-4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr</span> <div style='margin-top:5px; border-top:1px dashed #ccc; padding-top:4px;'>Administer <b>q 6 hr</b></div>" }
-                    ],
-                    "9": [
-                        { name: "Cefoperazone/sulbactam + <br>Ampicillin/sulbactam", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 4 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 4 hr</span> <div style='margin-top:5px; border-top:1px dashed #ccc; padding-top:4px;'>Administer <b>q 8 hr</b></div>" }
+                    doseLabel: "8-9",
+                    regimens: [
+                        { name: "Sulbactam เดี่ยว", subDose: "8 กรัม/วัน", type: "single", ld: "<b>Sulbactam 4 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Sulbactam 2 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 6 hr" },
+                        { name: "Sulbactam เดี่ยว", subDose: "9 กรัม/วัน", type: "single", ld: "<b>Sulbactam 4 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 8 hr" },
+                        { name: "Cefoperazone/sulbactam +<br>Ampicillin/sulbactam", subDose: "8 กรัม/วัน", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 6 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr q 6 hr</span>" },
+                        { name: "Cefoperazone/sulbactam +<br>Ampicillin/sulbactam", subDose: "9 กรัม/วัน", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 8 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 4 hr q 8 hr</span>" }
                     ]
                 },
                 "moderate": {
-                    "6": [
+                    doseLabel: "6",
+                    regimens: [
                         { name: "Sulbactam เดี่ยว", type: "single", ld: "<b>Sulbactam 4 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Sulbactam 2 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 8 hr" },
-                        { name: "Cefoperazone/sulbactam", type: "combo", ld: "<b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 6 hr" },
-                        { name: "Ampicillin/sulbactam", type: "combo", ld: "<b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 30 min", md: "<b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 4 hr q 6 hr" },
-                        { name: "Cefoperazone/sulbactam + <br>Ampicillin/sulbactam", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 3-4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3-4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr</span> <div style='margin-top:5px; border-top:1px dashed #ccc; padding-top:4px;'>Administer <b>q 8 hr</b></div>" }
+                        { name: "Cefoperazone/sulbactam +<br>Ampicillin/sulbactam", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 8 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr q 8 hr</span>" }
                     ]
                 },
                 "severe": {
-                    "4": [
+                    doseLabel: "4",
+                    regimens: [
                         { name: "Sulbactam เดี่ยว", type: "single", ld: "<b>Sulbactam 4 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Sulbactam 2 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 12 hr" },
-                        { name: "Cefoperazone/sulbactam", type: "combo", ld: "<b>Cefoperazone/sulbactam 3-4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 6 hr" },
-                        { name: "Ampicillin/sulbactam", type: "combo", ld: "<b>Ampicillin/sulbactam 3-4.5 g</b> + NSS 100 mL IV drip in 30 min", md: "<b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr q 6 hr" },
-                        { name: "Cefoperazone/sulbactam + <br>Ampicillin/sulbactam", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 3-4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3-4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr</span> <div style='margin-top:5px; border-top:1px dashed #ccc; padding-top:4px;'>Administer <b>q 12 hr</b></div>" }
-                    ],
-                    "3": [
-                        { name: "Cefoperazone/sulbactam", type: "combo", ld: "<b>Cefoperazone/sulbactam 3-4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 8 hr" },
-                        { name: "Ampicillin/sulbactam", type: "combo", ld: "<b>Ampicillin/sulbactam 3-4.5 g</b> + NSS 100 mL IV drip in 30 min", md: "<b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr q 8 hr" }
+                        { name: "Cefoperazone/sulbactam +<br>Ampicillin/sulbactam", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 12 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr q 12 hr</span>" }
                     ]
                 }
             },
             "high": {
                 "normal": {
-                    "12": [
+                    doseLabel: "12",
+                    regimens: [
                         { name: "Sulbactam เดี่ยว", type: "single", ld: "<b>Sulbactam 4 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Sulbactam 4 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 8 hr" },
-                        { name: "Cefoperazone/sulbactam + <br>Ampicillin/sulbactam", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 4 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 4 hr</span> <div style='margin-top:5px; border-top:1px dashed #ccc; padding-top:4px;'>Administer <b>q 6 hr</b></div>" }
+                        { name: "Cefoperazone/sulbactam +<br>Ampicillin/sulbactam", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 6 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 4 hr q 6 hr</span>" }
                     ]
                 },
                 "moderate": {
-                    "6": [
-                        { name: "Sulbactam เดี่ยว", type: "single", ld: "<b>Sulbactam 4 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Sulbactam 2 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 8 hr" },
-                        { name: "Cefoperazone/sulbactam", type: "combo", ld: "<b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 6 hr" },
-                        { name: "Ampicillin/sulbactam", type: "combo", ld: "<b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 30 min", md: "<b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 4 hr q 6 hr" },
-                        { name: "Cefoperazone/sulbactam + <br>Ampicillin/sulbactam", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 3-4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3-4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr</span> <div style='margin-top:5px; border-top:1px dashed #ccc; padding-top:4px;'>Administer <b>q 8 hr</b></div>" }
-                    ],
-                    "8": [
-                        { name: "Sulbactam เดี่ยว", type: "single", ld: "<b>Sulbactam 4 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Sulbactam 2 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 6 hr" },
-                        { name: "Cefoperazone/sulbactam + <br>Ampicillin/sulbactam", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 3-4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3-4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr</span> <div style='margin-top:5px; border-top:1px dashed #ccc; padding-top:4px;'>Administer <b>q 6 hr</b></div>" }
-                    ],
-                    "9": [
-                        { name: "Cefoperazone/sulbactam + <br>Ampicillin/sulbactam", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 4 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 4 hr</span> <div style='margin-top:5px; border-top:1px dashed #ccc; padding-top:4px;'>Administer <b>q 8 hr</b></div>" }
+                    doseLabel: "7.5-8",
+                    regimens: [
+                        { name: "Sulbactam เดี่ยว", subDose: "8 กรัม/วัน", type: "single", ld: "<b>Sulbactam 4 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Sulbactam 2 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 6 hr" },
+                        { name: "Cefoperazone/sulbactam +<br>Ampicillin/sulbactam", subDose: "7.5 กรัม/วัน", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 8 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr q 8 hr</span>" }
                     ]
                 },
                 "severe": {
-                    "4": [
-                        { name: "Sulbactam เดี่ยว", type: "single", ld: "<b>Sulbactam 4 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Sulbactam 2 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 12 hr" },
-                        { name: "Cefoperazone/sulbactam", type: "combo", ld: "<b>Cefoperazone/sulbactam 3-4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 6 hr" },
-                        { name: "Ampicillin/sulbactam", type: "combo", ld: "<b>Ampicillin/sulbactam 3-4.5 g</b> + NSS 100 mL IV drip in 30 min", md: "<b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr q 6 hr" },
-                        { name: "Cefoperazone/sulbactam + <br>Ampicillin/sulbactam", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 3-4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3-4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr</span> <div style='margin-top:5px; border-top:1px dashed #ccc; padding-top:4px;'>Administer <b>q 12 hr</b></div>" }
-                    ],
-                    "6": [
+                    doseLabel: "6",
+                    regimens: [
                         { name: "Sulbactam เดี่ยว", type: "single", ld: "<b>Sulbactam 4 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Sulbactam 2 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 8 hr" },
-                        { name: "Cefoperazone/sulbactam", type: "combo", ld: "<b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min", md: "<b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 6 hr" },
-                        { name: "Ampicillin/sulbactam", type: "combo", ld: "<b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 30 min", md: "<b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 4 hr q 6 hr" },
-                        { name: "Cefoperazone/sulbactam + <br>Ampicillin/sulbactam", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 3-4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3-4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr</span> <div style='margin-top:5px; border-top:1px dashed #ccc; padding-top:4px;'>Administer <b>q 8 hr</b></div>" }
+                        { name: "Cefoperazone/sulbactam +<br>Ampicillin/sulbactam", type: "mix", ld: "<span class='mix-block'><b>Cefoperazone/sulbactam 4.5 g</b> + NSS/D5W 100 mL IV drip in 30 min</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 4.5 g</b> + NSS 100 mL IV drip in 30 min</span>", md: "<span class='mix-block'><b>Cefoperazone/sulbactam 3 g</b> + NSS/D5W 100 mL IV drip in 4 hr q 8 hr</span><span class='mix-block'><span class='plus-sign'>+</span> <b>Ampicillin/sulbactam 3 g</b> + NSS 100 mL IV drip in 4 hr q 8 hr</span>" }
                     ]
                 }
             }
@@ -451,7 +414,6 @@
                 return;
             }
 
-            document.getElementById('doseSection').style.display = 'none';
             document.getElementById('resultsList').style.display = 'none';
 
             btn.disabled = true;
@@ -468,47 +430,30 @@
                     setTimeout(() => sepsisInfo.style.display = 'none', 500);
                 }
 
-                generateChips(mic, crcl);
+                renderCards(mic, crcl);
             }, 600);
         }
 
-        function generateChips(mic, crcl) {
-            const container = document.getElementById('chipsContainer');
-            const section = document.getElementById('doseSection');
-            container.innerHTML = '';
-
-            const dataGroup = db[mic]?.[crcl];
-            if (!dataGroup) {
-                container.innerHTML = '<span style="color:red">ไม่พบข้อมูลสำหรับเงื่อนไขนี้</span>';
-                section.style.display = 'block';
-                return;
-            }
-
-            const doses = Object.keys(dataGroup).sort((a,b) => parseInt(a) - parseInt(b));
-
-            doses.forEach(dose => {
-                const chip = document.createElement('div');
-                chip.className = 'chip';
-                chip.innerText = dose + ' g/day';
-                chip.onclick = () => {
-                    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-                    chip.classList.add('active');
-                    renderCards(mic, crcl, dose);
-                };
-                container.appendChild(chip);
-            });
-
-            section.style.display = 'block';
-            section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-
-        function renderCards(mic, crcl, dose) {
+        function renderCards(mic, crcl) {
             const list = document.getElementById('resultsList');
             list.innerHTML = '';
 
-            const regimens = db[mic][crcl][dose];
+            const dataGroup = db[mic]?.[crcl];
             
-            regimens.forEach(regimen => {
+            if (!dataGroup) {
+                list.innerHTML = '<span style="color:red; text-align:center; display:block; padding: 20px;">ไม่พบข้อมูลสำหรับเงื่อนไขนี้</span>';
+                list.style.display = 'flex';
+                return;
+            }
+
+            // --- ส่วนของ Total Dose Header ---
+            const headerCard = document.createElement('div');
+            headerCard.className = 'total-dose-header';
+            headerCard.innerHTML = `🎯 ผลรวมเป้าหมาย Sulbactam: <strong>${dataGroup.doseLabel} กรัม/วัน</strong>`;
+            list.appendChild(headerCard);
+
+            // --- Render Regimen Cards ---
+            dataGroup.regimens.forEach(regimen => {
                 const card = document.createElement('div');
                 card.className = 'regimen-card';
 
@@ -517,10 +462,15 @@
                 if(regimen.type === 'combo') { badgeClass = 'badge-combo'; badgeText = 'Fixed-dose Combination'; }
                 if(regimen.type === 'mix') { badgeClass = 'badge-mix'; badgeText = 'Combination Therapy'; }
 
+                let subDoseBadge = regimen.subDose ? `<div class="badge badge-dose-spec">${regimen.subDose}</div>` : '';
+
                 card.innerHTML = `
                     <div class="drug-header">
                         <div class="drug-title">${regimen.name}</div>
-                        <div class="badge ${badgeClass}">${badgeText}</div>
+                        <div>
+                            ${subDoseBadge}
+                            <div class="badge ${badgeClass}">${badgeText}</div>
+                        </div>
                     </div>
 
                     <div class="detail-row">
